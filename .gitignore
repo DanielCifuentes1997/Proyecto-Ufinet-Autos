@@ -37,3 +37,5 @@ build/
 *.tmp
 .DS_Store
 Thumbs.db
+
+application.properties
