@@ -1,5 +1,6 @@
 package com.ufinet.autos.infrastructure.security;
 
+import com.ufinet.autos.infrastructure.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,6 +37,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
+                        // Aquí están tus rutas públicas
                         .requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()
                 )
@@ -67,9 +69,17 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+        
+        // CORRECCIÓN CRÍTICA PARA QUE FUNCIONE EN POSTMAN:
+        // Usamos AllowedOriginPatterns("*") en lugar de una lista fija.
+        // Esto permite Postman, Frontend y cualquier cosa.
+        configuration.setAllowedOriginPatterns(List.of("*")); 
+        
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        
+        // Permitimos TODOS los headers para evitar problemas
+        configuration.setAllowedHeaders(List.of("*")); 
+        
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
