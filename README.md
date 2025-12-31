@@ -1,6 +1,6 @@
 # Ufinet Autos - Sistema de Gestión Vehicular
 
-Este proyecto es una solución Full Stack desarrollada como parte de la prueba técnica para el rol de Desarrollador Senior. La aplicación permite a los usuarios registrarse, autenticarse y gestionar un inventario de vehículos (CRUD) con validaciones de negocio y seguridad integrada.
+Este proyecto es una solución Full Stack desarrollada como parte de la prueba técnica para el rol de Desarrollador Junior. La aplicación permite a los usuarios registrarse, autenticarse y gestionar un inventario de vehículos (CRUD) con validaciones de negocio y seguridad integrada.
 
 El sistema implementa una arquitectura basada en microservicios monolíticos (Spring Boot) con un frontend reactivo (React + TypeScript), asegurando buenas prácticas de desarrollo, principios SOLID y una separación clara de responsabilidades.
 
