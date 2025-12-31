@@ -25,8 +25,8 @@ public class CarController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Car>> getMyCars(Principal principal) {
-        return ResponseEntity.ok(carService.getMyCars(principal.getName()));
+    public ResponseEntity<List<Car>> getMyCars(@RequestParam(required = false) String search, Principal principal) {
+        return ResponseEntity.ok(carService.getMyCars(principal.getName(), search));
     }
 
     @GetMapping("/{id}")

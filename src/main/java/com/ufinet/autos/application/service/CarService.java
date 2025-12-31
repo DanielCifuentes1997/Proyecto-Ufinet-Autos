@@ -32,9 +32,14 @@ public class CarService {
     }
 
     @Transactional(readOnly = true)
-    public List<Car> getMyCars(String username) {
+    public List<Car> getMyCars(String username, String keyword) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("El usuario especificado no existe."));
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            return carRepository.searchCars(keyword, user);
+        }
+        
         return carRepository.findByUser(user);
     }
 

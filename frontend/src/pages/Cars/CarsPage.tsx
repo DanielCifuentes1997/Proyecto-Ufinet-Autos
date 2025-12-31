@@ -9,8 +9,8 @@ const CarsPage = () => {
     const [cars, setCars] = useState<Car[]>([]);
     const [loading, setLoading] = useState(true);
     const [editingId, setEditingId] = useState<number | null>(null);
+    const [searchTerm, setSearchTerm] = useState('');
     
-    // Estado inicial incluyendo photoUrl vacío
     const [formData, setFormData] = useState<Car>({
         brand: '',
         model: '',
@@ -20,9 +20,11 @@ const CarsPage = () => {
         photoUrl: '' 
     });
 
-    const fetchCars = async () => {
+    const fetchCars = async (query: string = '') => {
         try {
-            const response = await api.get('/cars');
+            const response = await api.get('/cars', {
+                params: { search: query }
+            });
             setCars(response.data);
         } catch (error) {
             console.error('Error fetching cars', error);
@@ -35,6 +37,11 @@ const CarsPage = () => {
         fetchCars();
     }, []);
 
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        fetchCars(searchTerm);
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
@@ -45,7 +52,6 @@ const CarsPage = () => {
                 await api.post('/cars', formData);
                 alert('Auto creado correctamente');
             }
-            // Resetear formulario incluyendo photoUrl
             setFormData({ brand: '', model: '', year: new Date().getFullYear(), licensePlate: '', color: '', photoUrl: '' });
             setEditingId(null);
             fetchCars();
@@ -57,13 +63,14 @@ const CarsPage = () => {
     const handleEdit = (car: Car) => {
         setFormData(car);
         setEditingId(car.id!);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const handleDelete = async (id: number) => {
         if (window.confirm('¿Estás seguro de eliminar este auto?')) {
             try {
                 await api.delete(`/cars/${id}`);
-                fetchCars();
+                fetchCars(searchTerm);
             } catch (error) {
                 console.error('Error deleting car', error);
             }
@@ -135,7 +142,6 @@ const CarsPage = () => {
                             required
                             className="form-input"
                         />
-                        {/* Nuevo campo para la URL de la Foto */}
                         <input
                             name="photoUrl"
                             placeholder="URL de la Foto (http://...)"
@@ -145,7 +151,6 @@ const CarsPage = () => {
                         />
                     </div>
 
-                    {/* Vista previa pequeña si hay una URL válida en el formulario */}
                     {formData.photoUrl && (
                         <div style={{ marginTop: '10px', textAlign: 'center' }}>
                             <p style={{ fontSize: '0.8rem', color: '#666' }}>Vista previa:</p>
@@ -153,7 +158,7 @@ const CarsPage = () => {
                                 src={formData.photoUrl} 
                                 alt="Vista previa" 
                                 style={{ height: '80px', borderRadius: '5px', objectFit: 'cover' }} 
-                                onError={(e) => (e.currentTarget.style.display = 'none')} // Ocultar si el link está roto
+                                onError={(e) => (e.currentTarget.style.display = 'none')} 
                             />
                         </div>
                     )}
@@ -171,13 +176,42 @@ const CarsPage = () => {
                 </form>
             </div>
 
+            <div style={{ margin: '20px 0', display: 'flex', gap: '10px', justifyContent: 'center' }}>
+                <form onSubmit={handleSearch} style={{ display: 'flex', gap: '10px', width: '100%', maxWidth: '500px' }}>
+                    <input 
+                        type="text" 
+                        placeholder="Buscar por placa, marca o modelo..." 
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="form-input"
+                        style={{ flex: 1 }}
+                    />
+                    <button type="submit" className="btn-submit" style={{ width: 'auto' }}>
+                        Buscar
+                    </button>
+                    {searchTerm && (
+                        <button 
+                            type="button" 
+                            className="btn-cancel" 
+                            style={{ width: 'auto' }}
+                            onClick={() => {
+                                setSearchTerm('');
+                                fetchCars('');
+                            }}
+                        >
+                            Limpiar
+                        </button>
+                    )}
+                </form>
+            </div>
+
             {loading ? (
                 <p>Cargando autos...</p>
             ) : (
                 <table className="cars-table">
                     <thead>
                         <tr>
-                            <th>Foto</th> {/* Nueva columna */}
+                            <th>Foto</th>
                             <th>Marca</th>
                             <th>Modelo</th>
                             <th>Año</th>
@@ -219,7 +253,9 @@ const CarsPage = () => {
                         ))}
                         {cars.length === 0 && (
                             <tr>
-                                <td colSpan={7} style={{ textAlign: 'center' }}>No tienes autos registrados.</td>
+                                <td colSpan={7} style={{ textAlign: 'center' }}>
+                                    {searchTerm ? 'No se encontraron resultados para tu búsqueda.' : 'No tienes autos registrados.'}
+                                </td>
                             </tr>
                         )}
                     </tbody>
