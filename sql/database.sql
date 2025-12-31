@@ -1,0 +1,18 @@
+CREATE TABLE users (
+    id BIGINT IDENTITY(1,1) PRIMARY KEY,
+    full_name VARCHAR(100) NOT NULL,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE cars (
+    id BIGINT IDENTITY(1,1) PRIMARY KEY,
+    brand VARCHAR(50) NOT NULL,
+    model VARCHAR(50) NOT NULL,
+    year SMALLINT NOT NULL,
+    license_plate VARCHAR(20) NOT NULL UNIQUE,
+    color VARCHAR(30) NOT NULL,
+    photo_url VARCHAR(2048),
+    user_id BIGINT NOT NULL,
+    CONSTRAINT fk_cars_users FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);

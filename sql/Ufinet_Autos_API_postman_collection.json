@@ -1,0 +1,242 @@
+{
+	"info": {
+		"_postman_id": "851152ee-a04c-418d-b585-bb0eff557b72",
+		"name": "Ufinet Autos API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "51126380",
+		"_collection_link": "https://danielcifuentes1997-5451172.postman.co/workspace/Daniel-Cifuentes's-Workspace~af0f7708-4fcd-4056-8a6f-ea456e15e88b/collection/51126380-851152ee-a04c-418d-b585-bb0eff557b72?action=share&source=collection_link&creator=51126380"
+	},
+	"item": [
+		{
+			"name": "CreateCar",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"brand\": \"Mazda\",\r\n  \"model\": \"CX-30\",\r\n  \"year\": 2025,\r\n  \"licensePlate\": \"DCS-410\",\r\n  \"color\": \"Rojo\",\r\n  \"photoUrl\": \"https://chileautos.pxcrush.net/cars/dealer/64otmjc9ml4y6qgqwa7bacebr.jpg?pxc_method=fitfill&pxc_bgtype=self&height=725&width=1087\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/cars",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"cars"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LoginUser-Front",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"pm.environment.set(\"token\", jsonData.token);"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\": \"dani\",\r\n  \"password\": \"daniel\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/auth/authenticate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"auth",
+						"authenticate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RegisterUser-Front",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Origin",
+						"value": "http://localhost:5173",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"fullName\": \"Esteban Blandon\",\r\n  \"username\": \"Esteban\",\r\n  \"password\": \"password123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/auth/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get My Cars (Filter)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/api/cars?search=mazda",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"cars"
+					],
+					"query": [
+						{
+							"key": "search",
+							"value": "mazda"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateCar",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"brand\": \"Mazda\",\r\n  \"model\": \"CX-30 Turbo\",\r\n  \"year\": 2025,\r\n  \"licensePlate\": \"DCS-410\",\r\n  \"color\": \"Soul Red\",\r\n  \"photoUrl\": \"https://chileautos.pxcrush.net/cars/dealer/64otmjc9ml4y6qgqwa7bacebr.jpg?pxc_method=fitfill&pxc_bgtype=self&height=725&width=1087\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/api/cars/1",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"cars",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteCar",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/api/cars/1",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"cars",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": ""
+		},
+		{
+			"key": "token",
+			"value": ""
+		}
+	]
+}

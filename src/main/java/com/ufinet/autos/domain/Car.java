@@ -30,7 +30,7 @@ public class Car {
     private Integer year;
 
     @NotBlank(message = "La placa es obligatoria")
-    @Pattern(regexp = "^[A-Za-z0-9-]+$", message = "La placa contiene caracteres inválidos")
+    @Pattern(regexp = "^[A-Z]{3}-\\d{3}$", message = "El formato de la placa debe ser AAA-123 (3 Letras Mayúsculas - 3 Números)")
     @Column(name = "license_plate", nullable = false, unique = true, length = 20)
     private String licensePlate;
 
