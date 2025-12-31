@@ -27,7 +27,7 @@ const CarsPage = () => {
             });
             setCars(response.data);
         } catch (error) {
-            console.error('Error fetching cars', error);
+            console.error(error);
         } finally {
             setLoading(false);
         }
@@ -72,7 +72,7 @@ const CarsPage = () => {
                 await api.delete(`/cars/${id}`);
                 fetchCars(searchTerm);
             } catch (error) {
-                console.error('Error deleting car', error);
+                console.error(error);
             }
         }
     };
@@ -101,63 +101,74 @@ const CarsPage = () => {
                 <h3>{editingId ? 'Editar Auto' : 'Agregar Nuevo Auto'}</h3>
                 <form onSubmit={handleSubmit}>
                     <div className="form-grid">
-                        <input
-                            name="brand"
-                            placeholder="Marca (ej. Toyota)"
-                            value={formData.brand}
-                            onChange={handleChange}
-                            required
-                            className="form-input"
-                        />
-                        <input
-                            name="model"
-                            placeholder="Modelo (ej. Corolla)"
-                            value={formData.model}
-                            onChange={handleChange}
-                            required
-                            className="form-input"
-                        />
-                        <input
-                            name="year"
-                            type="number"
-                            placeholder="Año"
-                            value={formData.year}
-                            onChange={handleChange}
-                            required
-                            className="form-input"
-                        />
-                        <input
-                            name="licensePlate"
-                            placeholder="Placa"
-                            value={formData.licensePlate}
-                            onChange={handleChange}
-                            required
-                            className="form-input"
-                        />
-                        <input
-                            name="color"
-                            placeholder="Color"
-                            value={formData.color}
-                            onChange={handleChange}
-                            required
-                            className="form-input"
-                        />
-                        <input
-                            name="photoUrl"
-                            placeholder="URL de la Foto (http://...)"
-                            value={formData.photoUrl || ''}
-                            onChange={handleChange}
-                            className="form-input"
-                        />
+                        <div className="form-group-item">
+                            <input
+                                name="brand"
+                                placeholder="Marca (ej. Toyota)"
+                                value={formData.brand}
+                                onChange={handleChange}
+                                required
+                                className="form-input"
+                            />
+                        </div>
+                        <div className="form-group-item">
+                            <input
+                                name="model"
+                                placeholder="Modelo (ej. Corolla)"
+                                value={formData.model}
+                                onChange={handleChange}
+                                required
+                                className="form-input"
+                            />
+                        </div>
+                        <div className="form-group-item">
+                            <input
+                                name="year"
+                                type="number"
+                                placeholder="Año"
+                                value={formData.year}
+                                onChange={handleChange}
+                                required
+                                className="form-input"
+                            />
+                        </div>
+                        <div className="form-group-item">
+                            <input
+                                name="licensePlate"
+                                placeholder="Placa (ABC-123)"
+                                value={formData.licensePlate}
+                                onChange={handleChange}
+                                required
+                                className="form-input"
+                            />
+                        </div>
+                        <div className="form-group-item">
+                            <input
+                                name="color"
+                                placeholder="Color"
+                                value={formData.color}
+                                onChange={handleChange}
+                                required
+                                className="form-input"
+                            />
+                        </div>
+                        <div className="form-group-item">
+                            <input
+                                name="photoUrl"
+                                placeholder="URL de la Foto (http://...)"
+                                value={formData.photoUrl || ''}
+                                onChange={handleChange}
+                                className="form-input"
+                            />
+                        </div>
                     </div>
 
                     {formData.photoUrl && (
-                        <div style={{ marginTop: '10px', textAlign: 'center' }}>
-                            <p style={{ fontSize: '0.8rem', color: '#666' }}>Vista previa:</p>
+                        <div style={{ marginBottom: '1.5rem', textAlign: 'center' }}>
                             <img 
                                 src={formData.photoUrl} 
                                 alt="Vista previa" 
-                                style={{ height: '80px', borderRadius: '5px', objectFit: 'cover' }} 
+                                style={{ height: '100px', borderRadius: '8px', objectFit: 'cover', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }} 
                                 onError={(e) => (e.currentTarget.style.display = 'none')} 
                             />
                         </div>
@@ -165,7 +176,7 @@ const CarsPage = () => {
 
                     <div className="action-buttons">
                         <button type="submit" className="btn-submit">
-                            {editingId ? 'Actualizar' : 'Guardar'}
+                            {editingId ? 'Actualizar Vehículo' : 'Guardar Vehículo'}
                         </button>
                         {editingId && (
                             <button type="button" onClick={handleCancel} className="btn-cancel">
@@ -176,8 +187,8 @@ const CarsPage = () => {
                 </form>
             </div>
 
-            <div style={{ margin: '20px 0', display: 'flex', gap: '10px', justifyContent: 'center' }}>
-                <form onSubmit={handleSearch} style={{ display: 'flex', gap: '10px', width: '100%', maxWidth: '500px' }}>
+            <div className="search-container">
+                <form onSubmit={handleSearch} style={{ display: 'flex', gap: '10px', width: '100%', maxWidth: '600px' }}>
                     <input 
                         type="text" 
                         placeholder="Buscar por placa, marca o modelo..." 
@@ -186,14 +197,13 @@ const CarsPage = () => {
                         className="form-input"
                         style={{ flex: 1 }}
                     />
-                    <button type="submit" className="btn-submit" style={{ width: 'auto' }}>
+                    <button type="submit" className="btn-submit" style={{ padding: '0.75rem 1.5rem' }}>
                         Buscar
                     </button>
                     {searchTerm && (
                         <button 
                             type="button" 
                             className="btn-cancel" 
-                            style={{ width: 'auto' }}
                             onClick={() => {
                                 setSearchTerm('');
                                 fetchCars('');
@@ -205,62 +215,69 @@ const CarsPage = () => {
                 </form>
             </div>
 
-            {loading ? (
-                <p>Cargando autos...</p>
-            ) : (
-                <table className="cars-table">
-                    <thead>
-                        <tr>
-                            <th>Foto</th>
-                            <th>Marca</th>
-                            <th>Modelo</th>
-                            <th>Año</th>
-                            <th>Placa</th>
-                            <th>Color</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {cars.map((car) => (
-                            <tr key={car.id}>
-                                <td>
-                                    {car.photoUrl ? (
-                                        <img 
-                                            src={car.photoUrl} 
-                                            alt={car.model} 
-                                            style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '50%' }} 
-                                        />
-                                    ) : (
-                                        <div style={{ width: '50px', height: '50px', background: '#eee', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: '#888' }}>
-                                            N/A
-                                        </div>
-                                    )}
-                                </td>
-                                <td>{car.brand}</td>
-                                <td>{car.model}</td>
-                                <td>{car.year}</td>
-                                <td>{car.licensePlate}</td>
-                                <td>{car.color}</td>
-                                <td>
-                                    <button onClick={() => handleEdit(car)} className="btn-edit">
-                                        Editar
-                                    </button>
-                                    <button onClick={() => handleDelete(car.id!)} className="btn-delete">
-                                        Eliminar
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                        {cars.length === 0 && (
+            <div className="table-responsive">
+                {loading ? (
+                    <p style={{ padding: '2rem', textAlign: 'center', color: '#6b7280' }}>Cargando información...</p>
+                ) : (
+                    <table className="cars-table">
+                        <thead>
                             <tr>
-                                <td colSpan={7} style={{ textAlign: 'center' }}>
-                                    {searchTerm ? 'No se encontraron resultados para tu búsqueda.' : 'No tienes autos registrados.'}
-                                </td>
+                                <th>Foto</th>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>Año</th>
+                                <th>Placa</th>
+                                <th>Color</th>
+                                <th>Acciones</th>
                             </tr>
-                        )}
-                    </tbody>
-                </table>
-            )}
+                        </thead>
+                        <tbody>
+                            {cars.map((car) => (
+                                <tr key={car.id}>
+                                    <td>
+                                        {car.photoUrl ? (
+                                            <img 
+                                                src={car.photoUrl} 
+                                                alt={car.model} 
+                                                style={{ width: '48px', height: '48px', objectFit: 'cover', borderRadius: '8px', border: '1px solid #e5e7eb' }} 
+                                                onError={(e) => {
+                                                    e.currentTarget.style.display = 'none';
+                                                }}
+                                            />
+                                        ) : (
+                                            <div style={{ width: '48px', height: '48px', background: '#f3f4f6', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: '#9ca3af' }}>
+                                                N/A
+                                            </div>
+                                        )}
+                                    </td>
+                                    <td><strong>{car.brand}</strong></td>
+                                    <td>{car.model}</td>
+                                    <td>{car.year}</td>
+                                    <td><span style={{ fontFamily: 'monospace', background: '#f3f4f6', padding: '2px 6px', borderRadius: '4px' }}>{car.licensePlate}</span></td>
+                                    <td>{car.color}</td>
+                                    <td>
+                                        <div style={{ display: 'flex' }}>
+                                            <button onClick={() => handleEdit(car)} className="btn-edit">
+                                                Editar
+                                            </button>
+                                            <button onClick={() => handleDelete(car.id!)} className="btn-delete">
+                                                Eliminar
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                            {cars.length === 0 && (
+                                <tr>
+                                    <td colSpan={7} style={{ textAlign: 'center', padding: '3rem', color: '#6b7280' }}>
+                                        {searchTerm ? 'No se encontraron resultados para tu búsqueda.' : 'No tienes autos registrados aún.'}
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                )}
+            </div>
         </div>
     );
 };
