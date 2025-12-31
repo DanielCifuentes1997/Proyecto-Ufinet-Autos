@@ -10,12 +10,14 @@ const CarsPage = () => {
     const [loading, setLoading] = useState(true);
     const [editingId, setEditingId] = useState<number | null>(null);
     
+    // Estado inicial incluyendo photoUrl vacío
     const [formData, setFormData] = useState<Car>({
         brand: '',
         model: '',
         year: new Date().getFullYear(),
         licensePlate: '',
-        color: ''
+        color: '',
+        photoUrl: '' 
     });
 
     const fetchCars = async () => {
@@ -43,7 +45,8 @@ const CarsPage = () => {
                 await api.post('/cars', formData);
                 alert('Auto creado correctamente');
             }
-            setFormData({ brand: '', model: '', year: new Date().getFullYear(), licensePlate: '', color: '' });
+            // Resetear formulario incluyendo photoUrl
+            setFormData({ brand: '', model: '', year: new Date().getFullYear(), licensePlate: '', color: '', photoUrl: '' });
             setEditingId(null);
             fetchCars();
         } catch (error) {
@@ -69,7 +72,7 @@ const CarsPage = () => {
 
     const handleCancel = () => {
         setEditingId(null);
-        setFormData({ brand: '', model: '', year: new Date().getFullYear(), licensePlate: '', color: '' });
+        setFormData({ brand: '', model: '', year: new Date().getFullYear(), licensePlate: '', color: '', photoUrl: '' });
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -132,7 +135,29 @@ const CarsPage = () => {
                             required
                             className="form-input"
                         />
+                        {/* Nuevo campo para la URL de la Foto */}
+                        <input
+                            name="photoUrl"
+                            placeholder="URL de la Foto (http://...)"
+                            value={formData.photoUrl || ''}
+                            onChange={handleChange}
+                            className="form-input"
+                        />
                     </div>
+
+                    {/* Vista previa pequeña si hay una URL válida en el formulario */}
+                    {formData.photoUrl && (
+                        <div style={{ marginTop: '10px', textAlign: 'center' }}>
+                            <p style={{ fontSize: '0.8rem', color: '#666' }}>Vista previa:</p>
+                            <img 
+                                src={formData.photoUrl} 
+                                alt="Vista previa" 
+                                style={{ height: '80px', borderRadius: '5px', objectFit: 'cover' }} 
+                                onError={(e) => (e.currentTarget.style.display = 'none')} // Ocultar si el link está roto
+                            />
+                        </div>
+                    )}
+
                     <div className="action-buttons">
                         <button type="submit" className="btn-submit">
                             {editingId ? 'Actualizar' : 'Guardar'}
@@ -152,6 +177,7 @@ const CarsPage = () => {
                 <table className="cars-table">
                     <thead>
                         <tr>
+                            <th>Foto</th> {/* Nueva columna */}
                             <th>Marca</th>
                             <th>Modelo</th>
                             <th>Año</th>
@@ -163,6 +189,19 @@ const CarsPage = () => {
                     <tbody>
                         {cars.map((car) => (
                             <tr key={car.id}>
+                                <td>
+                                    {car.photoUrl ? (
+                                        <img 
+                                            src={car.photoUrl} 
+                                            alt={car.model} 
+                                            style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '50%' }} 
+                                        />
+                                    ) : (
+                                        <div style={{ width: '50px', height: '50px', background: '#eee', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: '#888' }}>
+                                            N/A
+                                        </div>
+                                    )}
+                                </td>
                                 <td>{car.brand}</td>
                                 <td>{car.model}</td>
                                 <td>{car.year}</td>
@@ -180,7 +219,7 @@ const CarsPage = () => {
                         ))}
                         {cars.length === 0 && (
                             <tr>
-                                <td colSpan={6} style={{ textAlign: 'center' }}>No tienes autos registrados.</td>
+                                <td colSpan={7} style={{ textAlign: 'center' }}>No tienes autos registrados.</td>
                             </tr>
                         )}
                     </tbody>

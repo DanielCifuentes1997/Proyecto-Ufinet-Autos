@@ -38,7 +38,7 @@ public class Car {
     @Column(nullable = false, length = 30)
     private String color;
 
-    @Column(name = "photo_url")
+    @Column(name = "photo_url", length = 2048) 
     private String photoUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
