@@ -4,7 +4,9 @@ import com.ufinet.autos.application.dto.auth.AuthenticationRequest;
 import com.ufinet.autos.application.dto.auth.AuthenticationResponse;
 import com.ufinet.autos.application.dto.auth.RegisterRequest;
 import com.ufinet.autos.application.service.AuthenticationService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,12 +21,12 @@ public class AuthenticationController {
     private final AuthenticationService service;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
-        return ResponseEntity.ok(service.register(request));
+    public ResponseEntity<AuthenticationResponse> register(@RequestBody @Valid RegisterRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.register(request));
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
+    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody @Valid AuthenticationRequest request) {
         return ResponseEntity.ok(service.authenticate(request));
     }
 }

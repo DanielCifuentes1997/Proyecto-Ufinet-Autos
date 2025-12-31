@@ -2,7 +2,9 @@ package com.ufinet.autos.infrastructure.controller;
 
 import com.ufinet.autos.application.service.CarService;
 import com.ufinet.autos.domain.Car;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,8 +19,9 @@ public class CarController {
     private final CarService carService;
 
     @PostMapping
-    public ResponseEntity<Car> create(@RequestBody Car car, Principal principal) {
-        return ResponseEntity.ok(carService.createCar(car, principal.getName()));
+    public ResponseEntity<Car> create(@RequestBody @Valid Car car, Principal principal) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(carService.createCar(car, principal.getName()));
     }
 
     @GetMapping
@@ -34,7 +37,7 @@ public class CarController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Car> update(@PathVariable Long id, @RequestBody Car car, Principal principal) {
+    public ResponseEntity<Car> update(@PathVariable Long id, @RequestBody @Valid Car car, Principal principal) {
         return ResponseEntity.ok(carService.updateCar(id, car, principal.getName()));
     }
 

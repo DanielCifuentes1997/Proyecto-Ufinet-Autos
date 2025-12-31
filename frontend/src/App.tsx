@@ -1,7 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
+import LoginPage from './pages/Login/LoginPage';
+import RegisterPage from './pages/Register/RegisterPage';
+import CarsPage from './pages/Cars/CarsPage';
 import { type ReactNode } from 'react';
 
 const ProtectedRoute = ({ children }: { children: ReactNode }) => {
@@ -24,7 +25,7 @@ function App() {
             path="/autos" 
             element={
               <ProtectedRoute>
-                <h1>Aquí irán los Autos (Pronto)</h1>
+                <CarsPage />
               </ProtectedRoute>
             } 
           />
